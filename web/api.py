@@ -71,7 +71,17 @@ async def api_retrain():
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    import sklearn, numpy
+    from pathlib import Path
+    models_dir = Path(__file__).resolve().parent.parent / "models"
+    return {
+        "status": "ok",
+        "sklearn": sklearn.__version__,
+        "numpy": numpy.__version__,
+        "winner_model_exists": (models_dir / "winner_model.joblib").exists(),
+        "margin_model_exists": (models_dir / "margin_model.joblib").exists(),
+        "git_commit": "3cee8e8",
+    }
 
 
 if __name__ == "__main__":
