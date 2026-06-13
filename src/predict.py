@@ -81,7 +81,7 @@ def _predict_home_win_prob(winner_artifact, X: np.ndarray) -> float:
         hgb_probs = winner_artifact["hgb"].predict_proba(X)[:, 1]
         lr_probs = winner_artifact["lr"].predict_proba(X)[:, 1]
         w = winner_artifact["blend_weight"]
-        return float(w * hgb_probs + (1 - w) * lr_probs)
+        return float((w * hgb_probs + (1 - w) * lr_probs).item())
     return float(winner_artifact.predict_proba(X)[0, 1])
 
 
