@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 NBA Finals | Knicks vs Spurs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #06080f;
+      --surface: rgba(18, 24, 38, 0.85);
+      --surface2: rgba(30, 42, 62, 0.9);
+      --glass: rgba(255, 255, 255, 0.04);
+      --nyk: #006BB6;
+      --nyk-accent: #F58426;
+      --sas: #C4CED4;
+      --sas-dark: #000;
+      --gold: #d4af37;
+      --gold-light: #f5d76e;
+      --text: #f0f4fa;
+      --muted: #8b9cb3;
+      --green: #3dd68c;
+      --red: #f07178;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated mesh background */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(0, 107, 182, 0.25) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 85% 110%, rgba(245, 132, 38, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 30% at 50% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 60%);
+      animation: meshShift 12s ease-in-out infinite alternate;
+    }
+    .bg-mesh::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.015) 2px,
+        rgba(255,255,255,0.015) 4px
+      );
+      animation: scanlines 8s linear infinite;
+    }
+    @keyframes meshShift {
+      0% { filter: hue-rotate(0deg) brightness(1); }
+      100% { filter: hue-rotate(8deg) brightness(1.05); }
+    }
+    @keyframes scanlines {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(40px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 4rem;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
+      50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.45); }
+    }
+
+    .finals-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, rgba(212,175,55,0.2), rgba(212,175,55,0.05));
+      border: 1px solid rgba(212,175,55,0.35);
+      border-radius: 999px;
+      padding: 0.35rem 1rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 1rem;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    .finals-badge svg { width: 16px; height: 16px; fill: var(--gold); }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      animation: slideUp 0.8s ease-out 0.1s both;
+    }
+    .hero h1 .gold { color: var(--gold-light); }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      animation: slideUp 0.8s ease-out 0.2s both;
+    }
+
+    .odds-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 1rem;
+      padding: 0.3rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      animation: slideUp 0.8s ease-out 0.3s both;
+    }
+    .odds-badge.demo {
+      background: rgba(245, 132, 38, 0.15);
+      color: var(--nyk-accent);
+      border: 1px solid rgba(245, 132, 38, 0.3);
+    }
+    .odds-badge.live {
+      background: rgba(61, 214, 140, 0.15);
+      color: var(--green);
+      border: 1px solid rgba(61, 214, 140, 0.3);
+    }
+    .odds-badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    /* Series banner with logos */
+    .series-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1rem, 4vw, 2.5rem);
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem 1.5rem;
+      margin: 2rem 0;
+      animation: slideUp 0.8s ease-out 0.35s both;
+    }
+    .team-block {
+      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .team-logo {
+      width: clamp(64px, 12vw, 96px);
+      height: clamp(64px, 12vw, 96px);
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+      transition: transform 0.3s;
+    }
+    .team-block:hover .team-logo { transform: scale(1.08); }
+    .team-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+    }
+    .team-name.nyk { color: var(--nyk-accent); }
+    .team-name.sas { color: var(--sas); }
+    .team-wins {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .series-center {
+      text-align: center;
+      color: var(--muted);
+    }
+    .series-center .vs {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.25rem;
+    }
+    .series-center .lead {
+      font-size: 0.85rem;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+
+    /* Player headshots */
+    .players-row {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      animation: slideUp 0.8s ease-out 0.45s both;
+    }
+    .players-team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .players-team-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .headshots {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .headshot-wrap {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .headshot-wrap:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+    }
+    .headshot-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      background: var(--surface2);
+    }
+    .headshot-wrap .name {
+      position: absolute;
+      bottom: 0;
+      left: 0; right: 0;
+      background: rgba(0,0,0,0.75);
+      font-size: 0.5rem;
+      text-align: center;
+      padding: 1px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      animation: slideUp 0.8s ease-out 0.5s both;
+    }
+    .card h2 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.9rem;
+    }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    /* Animated prob bars */
+    .prob-bar-wrap { margin: 0.6rem 0; }
+    .prob-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.35rem;
+    }
+    .prob-bar {
+      height: 10px;
+      background: var(--surface2);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .prob-fill {
+      height: 100%;
+      border-radius: 5px;
+      width: 0;
+      animation: fillBar 1.2s ease-out forwards;
+    }
+    .prob-fill.nyk { background: linear-gradient(90deg, var(--nyk), var(--nyk-accent)); }
+    .prob-fill.sas { background: linear-gradient(90deg, #555, var(--sas)); }
+    .prob-fill.market { background: linear-gradient(90deg, #4a5568, #718096); }
+    .prob-fill.model { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+    @keyframes fillBar {
+      from { width: 0; }
+    }
+
+    /* Odds comparison section */
+    .odds-section {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(212,175,55,0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      animation: slideUp 0.8s ease-out 0.55s both;
+    }
+    .odds-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      color: var(--gold-light);
+      margin-bottom: 0.25rem;
+    }
+    .odds-section .subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-box {
+      background: var(--surface2);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+    .compare-box h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .edge-badge {
+      display: inline-block;
+      margin-top: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .edge-badge.value { background: rgba(61,214,140,0.2); color: var(--green); }
+    .edge-badge.lean { background: rgba(245,132,38,0.2); color: var(--nyk-accent); }
+    .edge-badge.neutral { background: rgba(139,156,179,0.2); color: var(--muted); }
+
+    .games-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+      animation: slideUp 0.8s ease-out 0.6s both;
+    }
+
+    .game-card {
+      background: var(--surface);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      animation: slideUp 0.6s ease-out both;
+    }
+    .game-card.played { border-left: 3px solid var(--green); }
+    .game-card.upcoming { border-left: 3px solid var(--gold); }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .game-num { font-weight: 700; font-size: 1.05rem; }
+    .badge {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+    }
+    .badge.final { background: rgba(61,214,140,0.15); color: var(--green); }
+    .badge.upcoming { background: rgba(212,175,55,0.15); color: var(--gold-light); }
+
+    .matchup { font-size: 1rem; margin-bottom: 0.4rem; }
+    .score-line {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .win-probs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+    }
+    .win-prob-box {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 0.65rem 0.8rem;
+      text-align: center;
+    }
+    .win-prob-box .team { font-size: 0.75rem; color: var(--muted); }
+    .win-prob-box .prob {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .game-odds-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 500px) { .game-odds-row { grid-template-columns: 1fr; } }
+    .game-odds-cell {
+      background: var(--glass);
+      border-radius: 8px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .game-odds-cell .label { color: var(--muted); font-size: 0.65rem; text-transform: uppercase; }
+    .game-odds-cell .val { font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-top: 0.15rem; }
+
+    .spread-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    .spread-item {
+      background: var(--surface2);
+      border-radius: 6px;
+      padding: 0.35rem 0.4rem;
+      text-align: center;
+      font-size: 0.75rem;
+    }
+    .spread-item .line { color: var(--muted); }
+    .spread-item .cover {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--gold-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <div class="container">
+    {% set status = data.series_status %}
+    {% set odds_meta = data.odds_meta %}
+    {% set soc = data.series_odds_comparison %}
+
+    <section class="hero">
+      <div class="finals-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 2L15 8.5L22 9.5L17 14.5L18 22L12 18.5L6 22L7 14.5L2 9.5L9 8.5L12 2Z"/></svg>
+        2026 NBA Finals
+      </div>
+      <h1><span class="gold">FINALS</span> PREDICTIONS</h1>
+      <p class="hero-sub">Machine learning model · Historical playoff data · Monte Carlo series simulation</p>
+      <div class="odds-badge {{ 'live' if odds_meta.mode == 'live' else 'demo' }}">
+        <span class="dot"></span>
+        {{ 'Live Odds' if odds_meta.mode == 'live' else 'Demo Odds' }}
+        {% if not odds_meta.api_key_configured and odds_meta.mode == 'demo' %}
+        · Set ODDS_API_KEY for live lines
+        {% endif %}
+      </div>
+    </section>
+
+    <div class="series-banner">
+      <div class="team-block">
+        <img class="team-logo" src="https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg" alt="Knicks">
+        <div class="team-name nyk">Knicks</div>
+        <div class="team-wins">{{ status.nyk_wins }}</div>
+      </div>
+      <div class="series-center">
+        <div class="vs">Best of 7</div>
+        <div class="lead">{{ status.leader }} leads</div>
+      </div>
+      <div class="team-block">
+        <img class="team-logo" src="https://cdn.nba.com/logos/nba/1610612759/global/L/logo.svg" alt="Spurs">
+        <div class="team-name sas">Spurs</div>
+        <div class="team-wins">{{ status.sas_wins }}</div>
+      </div>
+    </div>
+
+    <div class="players-row">
+      <div class="players-team">
+        <span class="players-team-label" style="color: var(--nyk-accent);">New York Knicks</span>
+        <div class="headshots">
+          <div class="headshot-wrap" title="Jalen Brunson">
+            <img src="https://cdn.nba.com/headshots/nba/latest/260x190/1628973.png" alt="Jalen Brunson">
+          </div>
+          <div class="headshot-wrap" title="Karl-Anthony Towns">
+            <img src="https://cdn.nba.com/headshots/nba/latest/260x190/1626157.png" alt="Karl-Anthony Towns">
+          </div>
+          <div class="headshot-wrap" title="OG Anunoby">
+            <img src="https://cdn.nba.com/headshots/nba/latest/260x190/1628384.png" alt="OG Anunoby">
+          </div>
+        </div>
+      </div>
+      <div class="players-team">
+        <span class="players-team-label" style="color: var(--sas);">San Antonio Spurs</span>
+        <div class="headshots">
+          <div class="headshot-wrap" title="Victor Wembanyama">
+            <img src="https://cdn.nba.com/headshots/nba/latest/260x190/1641705.png" alt="Victor Wembanyama">
+          </div>
+          <div class="headshot-wrap" title="De'Aaron Fox">
+            <img src="https://cdn.nba.com/headshots/nba/latest/260x190/1628368.png" alt="De'Aaron Fox">
+          </div>
+          <div class="headshot-wrap" title="Devin Vassell">
+            <img src="https://cdn.nba.com/headshots/nba/latest/260x190/1630170.png" alt="Devin Vassell">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Model Accuracy</h2>
+        {% set m = data.model_metrics %}
+        {% if m.get('cv_accuracy_mean') %}
+        <div class="metric-row">
+          <span>Cross-val (training)</span>
+          <span class="metric-value">{{ "%.1f"|format(m.cv_accuracy_mean * 100) }}%</span>
+        </div>
+        {% endif %}
+        {% if m.get('validation_2026_playoffs_accuracy') %}
+        <div class="metric-row">
+          <span>2026 Playoffs holdout</span>
+          <span class="metric-value">{{ "%.1f"|format(m.validation_2026_playoffs_accuracy * 100) }}%</span>
+        </div>
+        {% endif %}
+        {% if m.get('finals_played_games_accuracy') %}
+        <div class="metric-row">
+          <span>Finals G1–4 backtest</span>
+          <span class="metric-value">{{ "%.1f"|format(m.finals_played_games_accuracy * 100) }}%</span>
+        </div>
+        {% endif %}
+        <div class="metric-row">
+          <span>Training games</span>
+          <span class="metric-value">{{ m.get('train_games', '—') }}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Series Outcome Probabilities</h2>
+        {% set s = data.series_outcome_probabilities %}
+        <div class="prob-bar-wrap">
+          <div class="prob-label">
+            <span>Knicks win series</span>
+            <span>{{ "%.1f"|format(s.NYK_wins_series * 100) }}%</span>
+          </div>
+          <div class="prob-bar">
+            <div class="prob-fill nyk" style="animation-delay: 0.2s; --target: {{ s.NYK_wins_series * 100 }}%; width: {{ s.NYK_wins_series * 100 }}%;"></div>
+          </div>
+        </div>
+        <div class="metric-row"><span>Knicks in 5</span><span class="metric-value">{{ "%.1f"|format(s.NYK_in_5 * 100) }}%</span></div>
+        <div class="metric-row"><span>Knicks in 6</span><span class="metric-value">{{ "%.1f"|format(s.NYK_in_6 * 100) }}%</span></div>
+        <div class="metric-row"><span>Knicks in 7</span><span class="metric-value">{{ "%.1f"|format(s.NYK_in_7 * 100) }}%</span></div>
+        <div class="prob-bar-wrap" style="margin-top: 1rem;">
+          <div class="prob-label">
+            <span>Spurs win series</span>
+            <span>{{ "%.1f"|format(s.SAS_wins_series * 100) }}%</span>
+          </div>
+          <div class="prob-bar">
+            <div class="prob-fill sas" style="animation-delay: 0.4s; width: {{ s.SAS_wins_series * 100 }}%;"></div>
+          </div>
+        </div>
+        <div class="metric-row"><span>Spurs in 6</span><span class="metric-value">{{ "%.1f"|format(s.SAS_in_6 * 100) }}%</span></div>
+        <div class="metric-row"><span>Spurs in 7</span><span class="metric-value">{{ "%.1f"|format(s.SAS_in_7 * 100) }}%</span></div>
+      </div>
+    </div>
+
+    <section class="odds-section">
+      <h2>Model vs Market</h2>
+      <p class="subtitle">Series championship odds · {{ soc.odds_source }}</p>
+      <div class="compare-grid">
+        <div class="compare-box">
+          <h3>Knicks Win Series</h3>
+          <div class="prob-bar-wrap">
+            <div class="prob-label"><span>Model</span><span>{{ "%.1f"|format(soc.model_NYK_series_prob * 100) }}%</span></div>
+            <div class="prob-bar"><div class="prob-fill model" style="animation-delay: 0.3s; width: {{ soc.model_NYK_series_prob * 100 }}%;"></div></div>
+          </div>
+          <div class="prob-bar-wrap">
+            <div class="prob-label"><span>Market</span><span>{{ "%.1f"|format(soc.market_NYK_series_prob * 100) }}%</span></div>
+            <div class="prob-bar"><div class="prob-fill market" style="animation-delay: 0.5s; width: {{ soc.market_NYK_series_prob * 100 }}%;"></div></div>
+          </div>
+          {% set nyk_cmp = soc.NYK %}
+          <span class="edge-badge {{ nyk_cmp.signal }}">
+            {{ nyk_cmp.edge_pick }} edge {{ "%+.1f"|format(nyk_cmp.home_edge * 100 if nyk_cmp.edge_pick == 'NYK' else nyk_cmp.away_edge * 100) }}pp · {{ nyk_cmp.signal }}
+          </span>
+        </div>
+        <div class="compare-box">
+          <h3>Spurs Win Series</h3>
+          <div class="prob-bar-wrap">
+            <div class="prob-label"><span>Model</span><span>{{ "%.1f"|format((1 - soc.model_NYK_series_prob) * 100) }}%</span></div>
+            <div class="prob-bar"><div class="prob-fill model" style="animation-delay: 0.35s; width: {{ (1 - soc.model_NYK_series_prob) * 100 }}%;"></div></div>
+          </div>
+          <div class="prob-bar-wrap">
+            <div class="prob-label"><span>Market</span><span>{{ "%.1f"|format(soc.market_SAS_series_prob * 100) }}%</span></div>
+            <div class="prob-bar"><div class="prob-fill market" style="animation-delay: 0.55s; width: {{ soc.market_SAS_series_prob * 100 }}%;"></div></div>
+          </div>
+          <div class="metric-row" style="margin-top: 0.75rem; border: none;">
+            <span>Edge magnitude</span>
+            <span class="metric-value">{{ "%.1f"|format(nyk_cmp.edge_magnitude * 100) }}pp</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="games-section">
+      <h2>Game-by-Game Predictions</h2>
+      {% for game in data.games %}
+      <div class="game-card {{ 'played' if game.played else 'upcoming' }}" style="animation-delay: {{ 0.65 + loop.index0 * 0.08 }}s;">
+        <div class="game-header">
+          <span class="game-num">Game {{ game.game_number }}</span>
+          <span class="badge {{ 'final' if game.played else 'upcoming' }}">
+            {{ 'Final' if game.played else 'Upcoming' }}
+          </span>
+        </div>
+        <div class="matchup">{{ game.away_team }} @ {{ game.home_team }} — {{ game.date }}</div>
+        {% if game.played %}
+        <div class="score-line">Final: {{ game.away_team }} {{ game.actual_away_pts }} — {{ game.home_team }} {{ game.actual_home_pts }}</div>
+        {% endif %}
+        <div class="score-line">
+          Predicted: {{ game.away_team }} {{ "%.0f"|format(game.predicted_away_score) }} —
+          {{ game.home_team }} {{ "%.0f"|format(game.predicted_home_score) }}
+          (margin {{ "%+.1f"|format(game.predicted_margin) }})
+        </div>
+        <div class="win-probs">
+          <div class="win-prob-box">
+            <div class="team">{{ game.away_team }}</div>
+            <div class="prob">{{ "%.1f"|format(game.away_win_prob * 100) }}%</div>
+          </div>
+          <div class="win-prob-box">
+            <div class="team">{{ game.home_team }}</div>
+            <div class="prob">{{ "%.1f"|format(game.home_win_prob * 100) }}%</div>
+          </div>
+        </div>
+        {% if game.market_home_prob is not none and game.odds_comparison %}
+        <div class="game-odds-row">
+          <div class="game-odds-cell">
+            <div class="label">Model {{ game.home_team }}</div>
+            <div class="val">{{ "%.1f"|format(game.home_win_prob * 100) }}%</div>
+          </div>
+          <div class="game-odds-cell">
+            <div class="label">Market {{ game.home_team }}</div>
+            <div class="val">{{ "%.1f"|format(game.market_home_prob * 100) }}%</div>
+          </div>
+          <div class="game-odds-cell">
+            <div class="label">Edge</div>
+            <div class="val" style="color: {{ 'var(--green)' if game.odds_comparison.signal == 'value' else ('var(--nyk-accent)' if game.odds_comparison.signal == 'lean' else 'var(--muted)') }};">
+              {{ game.odds_comparison.edge_pick }} {{ "%+.1f"|format(game.odds_comparison.edge_magnitude * 100) }}pp
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        <div style="font-size: 0.85rem; color: var(--muted); margin-bottom: 0.25rem;">
+          Pick: <strong style="color: var(--text);">{{ game.predicted_winner }}</strong>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--muted); margin-bottom: 0.25rem;">Home team spread cover probability</div>
+        <div class="spread-grid">
+          {% for line in [-3.5, -2.5, -1.5, 1.5, 2.5, 3.5] %}
+          {% set key2 = 'home_%+.1f'|format(line) %}
+          {% if key2 in game.spread_probs %}
+          <div class="spread-item">
+            <div class="line">{{ game.home_team }} {{ "%+.1f"|format(line) }}</div>
+            <div class="cover">{{ "%.0f"|format(game.spread_probs[key2] * 100) }}%</div>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+
+    <footer>
+      Calibrated HistGradientBoosting + Logistic blend · Trained on 2021–2025 playoffs ·
+      Odds updated {{ odds_meta.fetched_at[:10] if odds_meta.fetched_at else '—' }} ·
+      <a href="/api/predictions">JSON API</a>
+    </footer>
+  </div>
+</body>
+</html>

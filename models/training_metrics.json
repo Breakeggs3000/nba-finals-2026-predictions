@@ -1,0 +1,31 @@
+{
+  "train_games": 337,
+  "validation_games_2026_playoffs": 80,
+  "cv_accuracy_mean": 0.6260755048287971,
+  "cv_accuracy_std": 0.011936424512279092,
+  "train_accuracy": 0.8753709198813057,
+  "blend_weight_hgb": 0.65,
+  "model_type": "Calibrated HistGradientBoosting + Logistic blend",
+  "feature_columns": [
+    "ppg_diff",
+    "papg_diff",
+    "win_rate_diff",
+    "rest_diff",
+    "series_wins_diff",
+    "recent_win_rate_diff",
+    "recent_margin_diff",
+    "fg_pct_diff",
+    "fg3_pct_diff",
+    "reb_diff",
+    "ast_diff",
+    "tov_diff",
+    "h2h_win_rate_diff",
+    "home_court",
+    "is_finals"
+  ],
+  "validation_2026_playoffs_accuracy": 0.6625,
+  "validation_2026_playoffs_brier": 0.21939929923364637,
+  "validation_2026_playoffs_margin_mae": 13.832971730490367,
+  "finals_played_games_accuracy": 0.75,
+  "finals_played_games": 4
+}
